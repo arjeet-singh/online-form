@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="1082811644666-99350d7ukavs0p44n69830h07m27ur2b.apps.googleusercontent.com">
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/page_head.css?t=34">
+    <link rel="stylesheet" href="../css/ajax-loader.css">
+
+    <title>SimpliFY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/480a62ecd0.js" crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="stylesheet" href="../login/login-modal-style.css?s=33">
+    <script>
+        $(document).ready(function() {
+            $('.login-modal-div').fadeOut();
+            $('body').css('background', 'white');
+            if ($.cookie("userName")) {
+
+                $('.model-title').fadeOut();
+                $('.signed-in-user').fadeIn();
+                console.log('user logged in');
+                $('.userimage').attr('src', $.cookie("userImage"));
+
+                $('.username').html($.cookie("userName"));
+
+            } else {
+                $('.signed-in-user').fadeOut();
+                $('.model-title').fadeIn();
+            }
+
+            $('.logout').on('click', function(e) {
+                signOut();
+                eraseCookie('userId');
+                eraseCookie('userName');
+                eraseCookie('userMail');
+                eraseCookie('userImage');
+                eraseCookie('systemId');
+                $('.model-title').fadeIn();
+                $('.signed-in-user').fadeOut();
+
+            });
+            $('.close-containe-btn').on('click', function(e) {
+                $('.login-modal-div').fadeOut();
+                e.stopPropagation();
+            });
+            $('.login-modal-div').on('click', function(e) {
+                $('.login-modal-div').fadeOut();
+                e.stopPropagation();
+            });
+
+            $('.login-div').on('click', function(e) {
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+                $('.login-modal-div').fadeIn();
+            });
+            $('.user-login-btn').on('click', function(e) {
+                $('.login-modal-div').fadeIn();
+            });
+            $('.new-form-btn').on('click', function(e) {
+                if ($.cookie("userName")) {
+                    $(this).attr('href', '../new_form/saved_form.php');
+                    $(this).attr('target', '_blank');
+                    e.stopPropagation();
+                } else {
+                    $(this).attr('href', '#');
+                    $(this).attr('target', '');
+                    $('.login-modal-div').fadeIn();
+                    e.stopPropagation();
+                }
+            })
+        });
+    </script>
+    <script>
+        // Get Cookie
+        function getCookie(key) {
+            var keyValue = $.cookie(key);
+            return keyValue ? keyValue : null;
+        }
+        // Erase Cookie
+        function eraseCookie(key) {
+            var keyValue = getCookie(key);
+            setCookie(key, keyValue, '-1');
+        }
+        // Set Cookie 
+        function setCookie(key, value, expiry) {
+            var expires = new Date();
+            expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+            document.cookie = key + '=' + value + ';path=/' + ';expires=' + expires.toUTCString();
+        }
+        var clicked = false;
+
+        function activeClick() {
+            clicked = true;
+        }
+
+        function onSignIn(googleUser) {
+            if (clicked) {
+                console.log('Auto calling Login');
+                // Useful data for your client-side scripts:
+                var profile = googleUser.getBasicProfile();
+                var userId = profile.getId();
+                var userName = profile.getName();
+                var userImage = profile.getImageUrl();
+                var userMail = profile.getEmail();
+                console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                console.log('Full Name: ' + profile.getName());
+                console.log('Given Name: ' + profile.getGivenName());
+                console.log('Family Name: ' + profile.getFamilyName());
+                console.log("Image URL: " + profile.getImageUrl());
+                console.log("Email: " + profile.getEmail());
+
+                // The ID token you need to pass to your backend:
+                var id_token = googleUser.getAuthResponse().id_token;
+                console.log("ID Token: " + id_token);
+                var userDatalogin = {
+                    'userId': userId,
+                    'UserName': userName,
+                    'userImage': userImage,
+                    'userMail': userMail,
+                    'systemId': id_token
+                };
+                // userDatalogin['userId'] = userId;
+                // userDatalogin['UserName'] = userName;
+                // userDatalogin['userImage'] = userImage;
+                // userDatalogin['userMail'] = userMail;
+                console.log(userDatalogin);
+                var userdata = JSON.stringify(userDatalogin);
+                //console.log('After JSON : '+userdata);
+                jQuery.ajax({
+                    type: "POST",
+                    url: "../new_form/ajax/google_sign_in.php",
+                    data: "userDatalogin=" + userdata,
+                    success: function(result) {
+
+                        console.log(result);
+                        var reponse = jQuery.parseJSON(result);
+                        console.log(reponse);
+                        if (reponse['STATUS'] == 'success') {
+                            setCookie('userId', reponse['USER_ID'], 1);
+                            setCookie('userName', profile.getName(), 1);
+                            setCookie('userMail', profile.getEmail(), 1);
+                            setCookie('userImage', profile.getImageUrl(), 1);
+                            setCookie('systemId', reponse['SYSTEM_ID'], 1);
+                            $('.login-modal-div').fadeOut();
+                            $('.model-title').fadeOut();
+                            $('.signed-in-user').fadeIn();
+                            $('.userimage').attr('src', profile.getImageUrl());
+                            $('.username').html(profile.getName());
+                        } else {
+                            alert('Faild');
+                        }
+                    },
+                    error: function(errorData) {
+                        console.log(errorData);
+                    }
+                });
+
+            }
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="loader" id="AjaxLoader" style="display:none;">
+        <div class="strip-holder">
+            <div class="strip-1"></div>
+            <div class="strip-2"></div>
+            <div class="strip-3"></div>
+        </div>
+    </div>
+    <header>
+        <div class="logo">SimpliFY</div>
+        <div class="user-data1 signed-in-user menu-sub-block user-status-bar">
+            <div class="user-display-block">
+                <img class="userimage user-image user-info-display">
+                <p class="username user-name user-info-display"></p>
+            </div>
+            <div class="logout-btn-container">
+                <p class="log-out-btn logout">Sign-Out <i class="fas fa-sign-out-alt"></i></p>
+            </div>
+        </div>
+
+        <div class="model-title user-status-bar">
+            <div class="user-display-block">
+                <p class="modal-title-text user-login-btn user-info-display">
+                    Sign-In
+                </p>
+            </div>
+        </div>
+        <div class="toggle"></div>
+        <div class="navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Step by Step Guide</a></li>
+                <li><a href="work.html">Work</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="social-bar">
+                <ul>
+                    <li>
+                        <a href="https://facebook.com">
+                            <img src="images/facebook.png" target="_blank" alt="" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com">
+                            <img src="images/twitter.png" target="_blank" alt="" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com">
+                            <img src="images/instagram.png" target="_blank" alt="" />
+                        </a>
+                    </li>
+                </ul>
+                <a href="mailto:mrrak605@email.com" class="email-icon">
+                    <img src="images/email.png" alt="" />
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="home">
+        <img src="images/home-img.jpg" class="home-img" alt="" />
+        <div class="home-content">
+            <h1>
+                We help to create <br /> your form in minuscule time.
+            </h1>
+            <p>
+                With the advent and emergence of events, hackathons and social-clubs SimpliFY brings an easiest way to create your data form where you can input the data of applicants hassle free.
+
+            </p>
+            <a href="#" target="blank" class="btn new-form-btn">Get Started</a>
+        </div>
+    </section>
+    <div class="login-modal-div">
+        <div class="login-div">
+            <div class="model-head">
+                <p class="noselect close-containe-btn delete-btn"><i class="fas fa-times font-awesome-kit"></i></p>
+            </div>
+            <div class="login-data-modal login-ui">
+                <div class="model-title">
+                    <p class="modal-title-text">
+                        Sign-In
+                    </p>
+                </div>
+                <div class="login-inputs">
+                    <form id="loginData">
+                        <div class="input-container">
+                            <label for="userid">User Id</label>
+                            <input id="userid" type="text" name="userid" class="text-input-field" placeholder="User Id" required>
+                        </div>
+                        <div class="input-container">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" name="password" class="text-input-field" placeholder="Password" required>
+                        </div>
+                        <div class="input-container">
+                            <input class="submit text-input-field" type="submit" name="login" value="Sign In">
+                        </div>
+                        <p class="new-user">New User ? <a href="#">Sign-Up</a></p>
+                        <div class="sign-up-api">
+                            <div class="g-signin2 google-sign-in" onclick="activeClick()" data-onsuccess="onSignIn"></div>
+                            <a class="lodin-api-link google-api" href="#">Facebook</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- <div class="login-data-modal login-status">
+                <h1>You are logged in</h1>
+                <div id="userlogindata" class="user-data">
+                    <img class="userimage">
+                    <p class="username"></p>
+                </div>
+                <a class="lodin-api-link logout" href="#">Log-out</a>
+            </div> -->
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+    <script src="js/user-login.js"></script>
+</body>
+<!-- <script src="js/userlogin.js"></script> -->
+<script>
+    // $(document)
+    //     .ajaxStart(function() {
+    //         $('#AjaxLoader').show();
+    //     })
+    //     .ajaxStop(function() {
+    //         $('#AjaxLoader').hide();
+    //     });
+</script>
+
+</html>

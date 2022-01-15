@@ -1,0 +1,160 @@
+* {
+    box-sizing: border-box;
+    color: #3d3d3d;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(209, 209, 209);
+}
+
+
+/* login modal div */
+
+.login-modal-div {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    background: rgba(180, 180, 180, 0.7);
+}
+
+.login-div {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
+.model-head {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+/* Login modal content */
+
+.login-data-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.model-title {
+    font-weight: 900;
+    padding: 10px 0px;
+    margin-bottom: 20px;
+}
+
+.model-title p {
+    color: rgb(218, 123, 0);
+    margin: 0%;
+    font-size: 22px;
+}
+
+.delete-btn {
+    margin: 0%;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+
+.delete-btn:hover .font-awesome-kit {
+    color: tomato;
+}
+
+
+/* Login form */
+
+#loginData {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    border: 1px solid gray;
+    margin-bottom: 40px;
+}
+
+.submit {
+    text-align: center;
+    font-weight: 900;
+    background-color: teal;
+    color: white;
+}
+
+.submit:hover {
+    background-color: rgb(1, 161, 161);
+}
+
+.input-container {
+    padding: 5px 0px;
+    width: 100%;
+}
+
+.input-container label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.text-input-field {
+    font-family: Times, Times New Roman, serif;
+    font-weight: 600;
+    margin: 10px 0px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.new-user {
+    margin: 0%;
+}
+
+.sign-up-api {
+    width: 100%;
+    padding: 20px 0px;
+    margin-top: 10px;
+    border-top: 1px solid gray;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.lodin-api-link {
+    width: 120px;
+    padding: 10px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+}
+
+.google-api {
+    color: white;
+    background-color: rgba(0, 60, 138, 0.774);
+    text-decoration: none;
+}
+
+
+/* login data */
+
+.user-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#userimage {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
