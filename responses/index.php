@@ -146,7 +146,7 @@
                            $userId = $r_data["USER_ID"];
                            $user_data = mysqli_fetch_assoc($conn->query("SELECT * FROM IFORM_USER WHERE USER_ID = '$userId'"));
                           ?>    
-                        <tr><td><?php echo $c; ?></td><td><a href="response-data.php?id=<?php echo $r_data["RESPONSE_ID"]; ?>"><?php echo $user_data["USER_NAME"]; ?></a></td><td><?php echo $r_data["RESPONSE_DATE"]; ?></td></tr>
+                        <tr><td><a href="response-data.php?id=<?php echo $r_data["RESPONSE_ID"]; ?>"><?php echo $c; ?></a></td><td><a href="response-data.php?id=<?php echo $r_data["RESPONSE_ID"]; ?>"><?php echo $user_data["USER_NAME"]; ?></a></td><td><?php echo $r_data["RESPONSE_DATE"]; ?></td></tr>
                      <?php $c++; }
                     ?>
                     </table>

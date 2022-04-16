@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 include'../../connection/connection.php';
 date_default_timezone_set("Asia/Calcutta");
 $datetime = date("Y-m-d H:i:s");

@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+
 include'../../connection/connection.php';
   //  class UserData {
   //      public $userName;

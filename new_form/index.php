@@ -78,7 +78,7 @@
     <div class="wrapper">
         <div class="heading">
            
-            <input class="heading-input" type="text" name="heading" value="Registration Form" placeholder="Heading" required>
+            <input class="heading-input" type="text" name="heading" value="Heading" placeholder="Heading" required>
             <input class="sub-heading-input" type="text" name="sub_heading" value="Sub-heading" placeholder="Sub Heading">
         </div>
         <form id="newForm">
@@ -151,7 +151,14 @@
                             </p>
                         </div>
                     </div>
-                    
+                    <div class="add-new-question">
+                    <div class="btn-container">
+                            <p class="btn add-btn question-add-btn question-edit-btn noselect">
+                            <i class="fas fa-plus font-awesome-kit"></i>
+                            Add New Question
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 
        
