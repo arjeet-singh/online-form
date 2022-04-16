@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="../login/login-modal-style.css?s=33">
     <script>
         $(document).ready(function() {
-            $('.login-modal-div').fadeOut();
-            $('body').css('background', 'white');
+            // $('.login-modal-div').fadeOut();
+            // $('body').css('background', 'white');
             if ($.cookie("userName")) {
 
                 $('.model-title').fadeOut();
@@ -76,7 +76,41 @@
                     $('.login-modal-div').fadeIn();
                     e.stopPropagation();
                 }
-            })
+            });
+    $(window).on('resize', function() {
+        var win = $(this); 
+        if (win.width() >= 400) {
+            $('.login-signup-block').css('left','0px');
+        }
+    });
+        $('.new-user').on('click',function(e){
+            if(window.innerWidth > 450){
+                $('.login-signup-block').css('left','-400px');
+            }
+            else{
+                $('.login-signup-block').css('left','-300px');
+            }
+           e.preventDefault();
+
+        });
+        $('.already-a-user').on('click',function(e){
+           $('.login-signup-block').css('left','0px');
+           e.preventDefault();
+
+        });
+        $('.view-button').on('click','.fa-eye',function(e){
+            var passType = $('#newpassword').prop('type');
+            if(passType == 'password'){
+                $('#newpassword').prop('type','text');
+                $(this).addClass('fa-eye-slash');
+                
+            }
+            else{
+                $('#newpassword').prop('type','password');
+                $(this).removeClass('fa-eye-slash');
+            }
+           e.preventDefault();
+        });
         });
     </script>
     <script>
@@ -128,10 +162,7 @@
                     'userMail': userMail,
                     'systemId': id_token
                 };
-                // userDatalogin['userId'] = userId;
-                // userDatalogin['UserName'] = userName;
-                // userDatalogin['userImage'] = userImage;
-                // userDatalogin['userMail'] = userMail;
+                
                 console.log(userDatalogin);
                 var userdata = JSON.stringify(userDatalogin);
                 //console.log('After JSON : '+userdata);
@@ -187,7 +218,7 @@
     </div>
     <header>
         <div class="logo">SimpliFY</div>
-        <div class="user-data1 signed-in-user menu-sub-block user-status-bar">
+        <div class="user-data1 signed-in-user menu-sub-block user-status-bar" style="z-index: 200;">
             <div class="user-display-block">
                 <img class="userimage user-image user-info-display">
                 <p class="username user-name user-info-display"></p>
@@ -197,7 +228,7 @@
             </div>
         </div>
 
-        <div class="model-title user-status-bar">
+        <div class="user-status-bar">
             <div class="user-display-block">
                 <p class="modal-title-text user-login-btn user-info-display">
                     Sign-In
@@ -250,21 +281,26 @@
             <a href="#" target="blank" class="btn new-form-btn">Get Started</a>
         </div>
     </section>
-    <div class="login-modal-div">
+    <div class="login-modal-div" style="display: none;">
         <div class="login-div">
             <div class="model-head">
                 <p class="noselect close-containe-btn delete-btn"><i class="fas fa-times font-awesome-kit"></i></p>
             </div>
+            <div class="login-signup-block">
+            <div class="login-block-modal">
             <div class="login-data-modal login-ui">
                 <div class="model-title">
                     <p class="modal-title-text">
                         Sign-In
                     </p>
                 </div>
+                <p class="signin-error error-message">
+
+                </p>
                 <div class="login-inputs">
-                    <form id="loginData">
+                    <form id="loginData" class="login-form">
                         <div class="input-container">
-                            <label for="userid">User Id</label>
+                            <label for="userid">Email Id</label>
                             <input id="userid" type="text" name="userid" class="text-input-field" placeholder="User Id" required>
                         </div>
                         <div class="input-container">
@@ -274,7 +310,7 @@
                         <div class="input-container">
                             <input class="submit text-input-field" type="submit" name="login" value="Sign In">
                         </div>
-                        <p class="new-user">New User ? <a href="#">Sign-Up</a></p>
+                        <p class="new-user hint-text">New User ? <a href="#">Sign-Up</a></p>
                         <div class="sign-up-api">
                             <div class="g-signin2 google-sign-in" onclick="activeClick()" data-onsuccess="onSignIn"></div>
                             <a class="lodin-api-link google-api" href="#">Facebook</a>
@@ -282,14 +318,48 @@
                     </form>
                 </div>
             </div>
-            <!-- <div class="login-data-modal login-status">
-                <h1>You are logged in</h1>
-                <div id="userlogindata" class="user-data">
-                    <img class="userimage">
-                    <p class="username"></p>
+            </div>
+            <div class="signup-block-modal">
+                <div class="login-data-modal login-ui">
+                    <div class="model-title">
+                        <p class="modal-title-text">
+                            Sign-Up
+                        </p>
+                    </div>
+                    <p class="signup-error error-message">
+
+                    </p>
+                    <div class="login-inputs">
+                        <form id="signUpData" class="login-form">
+                            <div class="input-container">
+                                <label for="newUserName">Name</label>
+                                <input id="newUserName" type="text" name="username" class="text-input-field" placeholder="Name" required>
+                            </div>
+                            <div class="input-container">
+                                <label for="newuserid">Email Id</label>
+                                <input id="newuserid" type="text" name="userid" class="text-input-field" placeholder="User Id" required>
+                            </div>
+                            <div class="input-container">
+                                <label for="newpassword">Password</label>
+                                <div class="pass-container">
+                                <input id="newpassword" type="password" name="password" class="text-input-field" placeholder="Password" required>
+                                <div class="view-button"><i class="fas fa-eye"></i></div>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input class="submit text-input-field" type="submit" name="login" value="Sign Up">
+                            </div>
+                            <p class="already-a-user hint-text">Already a User ? <a href="#">Sign-In</a></p>
+                            <!-- <div class="sign-up-api">  <i class="fas fa-eye-slash"></i>
+                                <div class="g-signin2 google-sign-in" onclick="activeClick()" data-onsuccess="onSignIn"></div>
+                                <a class="lodin-api-link google-api" href="#">Facebook</a>
+                            </div> -->
+                        </form>
+                    </div>
                 </div>
-                <a class="lodin-api-link logout" href="#">Log-out</a>
-            </div> -->
+            </div>
+            </div>
+         
         </div>
     </div>
     <script src="js/script.js"></script>
@@ -304,6 +374,7 @@
     //     .ajaxStop(function() {
     //         $('#AjaxLoader').hide();
     //     });
+   
 </script>
 
 </html>
