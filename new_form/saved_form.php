@@ -105,7 +105,7 @@
                     <div id='".$userform["FORM_ID"]."' class='forms-data form-data-block-con'>"; ?>
                     <div class='form-option-container'>
                     <p class='option-item'><i class='fas block-delete-btn fa-trash-alt'></i></p>
-                    <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/iform/form/?id=<?php echo $userform["FORM_ID"]; ?>" target="_blank"><p class='option-item'><i class='fas fa-share-alt'></i></p></a>
+                    <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/updated/iform/form/?id=<?php echo $userform["FORM_ID"]; ?>" target="_blank"><p class='option-item'><i class='fas fa-share-alt'></i></p></a>
                     </div>
                      <?php  echo "<a class='form-link' href='../saved-from/?id=".$userform["FORM_ID"]."'>
                      <div class='form-sub-block'><h2>".$userform["FORM_HEADING"]."</h2>

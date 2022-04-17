@@ -444,7 +444,7 @@ $('#' + getIndex + ' .lable-input-field').focus();
     // Form Submit Event ---------------------
     function changeLocation(formId) {
         console.log('Relocation');
-        var page = "http://www.aapkaman.in/simliFY/iform/saved-from/?id=" + formId;
+        var page = "http://www.aapkaman.in/simliFY/updated/iform/saved-from/?id=" + formId;
         window.location.replace(page);
     }
     $('#newForm').submit(function() {

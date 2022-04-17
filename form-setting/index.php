@@ -81,7 +81,7 @@
              <a href="../form-setting/">settings</a>
         </div>
         <div class="menu-items">
-        <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/iform/form/" target="_blank">Share</a>
+        <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/updated/iform/form/" target="_blank">Share</a>
         </div>
     </div>       
     <div class="wrapper">
