@@ -69,6 +69,14 @@ $(document).ready(function() {
     function getCurrentIndex() {
         return currentIndexValue;
     }
+            // Perform all task before leaving the page
+            $(window).blur(function() {
+
+                while(undoStack.items.length > 0){
+                    undoStack.shift();
+                }
+                      
+             });
     // Short Answer ---------------------------------------------------------------
     function addShortAnswerField(currentIndex) {
         $('#' + currentIndex + ' .client-input-field').remove();

@@ -66,6 +66,15 @@ $(document).ready(function() {
     // currentIndexValue = $('.container .input-container:first').attr('id');
     currentIndexValue = questionIndexvalue = $('.container .input-container:last').attr('id');
     // Prevent Enter key
+            // Perform all task before leaving the page
+            $(window).blur(function() {
+
+                while(undoStack.items.length > 0){
+                    undoStack.shift();
+                }
+                      
+             });
+
     $('#newForm').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -131,7 +140,7 @@ $(document).ready(function() {
     $(".container").on('click', '.mcq-option-delete-btn', function(e) {
         var blockid = getCurrentIndex();
         var countOption = $(this).parent().closest('.client-input-field').children().length;
-        //console.log(countOption);
+     
         if (countOption > 2) {
             var optionId = $(this).parent().closest('.mcq-option-container').attr('id');
             $('#' + optionId).fadeOut();
@@ -314,7 +323,7 @@ $(document).ready(function() {
     $('.addNewQuestion').on('click', function(e) {
         increasQuestionIndex();
         var getIndex = questionIndex();
-        // console.log(getIndex);
+     
         var currentIndex = getCurrentIndex();
         addNewQuestionBlock(getIndex,currentIndex)
         
@@ -332,8 +341,7 @@ $(document).ready(function() {
     $('.undo-section').on('click', '.undo-btn', function(e) {
         var blockid = $(this).attr('id');
         blockid = blockid.replace('undo', '');
-        // blockid = blockid.replace('option', '');
-        // console.log(blockid);
+       
         $('#' + blockid).fadeIn();
         clearTimeout(undoStack.pop());
         $(this).remove();
@@ -353,7 +361,7 @@ $(document).ready(function() {
     // Delete Questions ------------------------------------------------------
     $('.container').on('click', '.question-delete-btn', function(e) {
         var countOption = $('.container').children().length;
-        //console.log('Child Length : '+countOption);
+       
         if (countOption > 2) {
             var currentIndex = getCurrentIndex();
             if ($('#' + currentIndex).prevAll('.input-container').length > 0) {
@@ -471,17 +479,15 @@ $(document).ready(function() {
                 formData['Questions'].push(questionSet);
             });
 
-            console.log(formData);
+           
             data = JSON.stringify(formData);
-            console.log(data);
-            //console.log('Question : '+lableValue+' Question Type : '+qTyppe);
+          
             jQuery.ajax({
                 type: "POST",
                 url: "ajax/create_new_form.php",
                 data: "formData=" + data,
                 success: function(result) {
 
-                    console.log('php response : ' + result);
                     var reponse = jQuery.parseJSON(result);
                     console.log(reponse);
                 },
@@ -888,7 +894,6 @@ function updateHeading(form_id, heading, o_type) {
         data: "heading_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1005,7 +1010,6 @@ function questionUpdate(blockid, question_value) {
         data: "Question_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1027,7 +1031,6 @@ function questionTypeUpdagte(currentIndex, question_type) {
         data: "Question_Type_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1048,7 +1051,6 @@ function questionOptionUpdate(blockid, optionId, question_value) {
         data: "Question_Option_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1141,7 +1143,7 @@ function addNewOption(blockid, preOptionId, o_type) {
 // Required Question
 function updateRequiredQuestion(blockid, checked) {
     var q_data = { 'ID': blockid, 'q_status': checked };
-    console.log(q_data);
+    
     q_data = JSON.stringify(q_data);
     jQuery.ajax({
         type: "POST",
@@ -1149,7 +1151,6 @@ function updateRequiredQuestion(blockid, checked) {
         data: "required_question=" + q_data,
         success: function(result) {
 
-            // console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
             // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);
@@ -1184,10 +1185,8 @@ function addDiscroptionField(question_no) {
         data: "add_q_discription=" + question_no,
         success: function(result) {
 
-            // console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
-            // console.log(reponse);
-            // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);
+         
             callbackAdddiscription(reponse["ID"], question_no);
         },
         error: function(errorData) {
@@ -1273,7 +1272,6 @@ function addNewQuestion($form_id, pre_question, blockid, q_label, q_type, is_req
         data: "add_new_question=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
             // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);
