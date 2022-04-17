@@ -38,7 +38,7 @@
 
     <script src="js/form_main.js"></script>
     <script src="js/form_response.js"></script>
-    <script src="js/valid_user_js.js"></script>
+    <!-- <script src="js/valid_user_js.js"></script> -->
     
     <style>
         .hold{
@@ -185,5 +185,5 @@
 
   
 </body>
-<script src="../js/userlogin.js"></script>
+<!-- <script src="../js/userlogin.js"></script> -->
 </html>

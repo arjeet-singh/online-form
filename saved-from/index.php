@@ -105,7 +105,7 @@ else{
         </div>
         <div class="menu-items">
 
-             <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/iform/form/" target="_blank">Share</a>
+             <a href="https://wa.me/?text=http://www.aapkaman.in/simliFY/updated/iform/form/" target="_blank">Share</a>
         </div>
     </div>        
     <div class="wrapper">
@@ -189,7 +189,7 @@ else{
                                              }
                                              ?>
                                                 <div class="mcq-add-btn-field">
-                                                <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn hidden-section-class">Add Option <i class="fas fa-plus"></i></p>
+                                                <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn hidden-section-class add-btn">Add Option <i class="fas fa-plus"></i></p>
                                                 </div>
                                             <?php
                                         }
@@ -234,7 +234,16 @@ else{
                             </div>    
                             </p>
                         </div>
-                    </div></div>
+                    </div>
+                    <div class="add-new-question">
+                    <div class="btn-container">
+                            <p class="btn add-btn question-add-btn question-edit-btn noselect">
+                            <i class="fas fa-plus font-awesome-kit"></i>
+                            Add New Question
+                            </p>
+                        </div>
+                    </div>
+                </div>
                                        <?php
                             }
                         }

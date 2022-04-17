@@ -1,3 +1,6 @@
+:root{
+    --borderColor: rgb(221, 221, 221);
+}
 * {
     box-sizing: border-box;
     color: #3d3d3d;
@@ -49,7 +52,7 @@ form {
 .submit-input-container {
     width: calc(100% - 0px);
     padding: 15px;
-    margin: 10px 0px;
+    margin: 15px 0px;
     border: 1px solid teal;
     border-radius: 10px;
 }
@@ -208,7 +211,7 @@ font-size: 16px;
 
 .heading-input:focus {
     padding: 10px;
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
 }
 
 .sub-heading-input {
@@ -229,7 +232,7 @@ font-size: 16px;
 
 .sub-heading-input:focus {
     padding: 5px;
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
 }
 
 
@@ -252,9 +255,10 @@ font-size: 16px;
     width: 100%;
     margin: 10px 0px;
     padding: 10px 20px;
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
     border-radius: 5px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 
@@ -277,12 +281,12 @@ font-size: 16px;
 }
 
 .lable-input-field:focus {
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
     padding-left: 10px;
 }
 
 .current-active-block {
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
     padding-left: 10px;
 }
 
@@ -372,6 +376,7 @@ font-size: 16px;
     margin: 0px;
     margin-right: 10px;
     padding: 0%;
+    cursor: pointer;
 }
 
 .checkbox-add-btn {
@@ -393,8 +398,12 @@ font-size: 16px;
 .question-contraions {
     display: flex;
     justify-content: flex-end;
+    padding: 5px 0px;
     margin: 5px 0px;
-    border-top: 1px solid rgb(158, 158, 158);
+    border: 1px solid rgb(221, 221, 221);
+    border-left: none;
+    border-right: none;
+    border-radius: 5px;
 }
 
 .btn-container {
@@ -403,16 +412,16 @@ font-size: 16px;
     align-items: center;
     justify-items: center;
     padding: 0px 10px;
-    border-right: 1px solid gray;
+    border-right: 1px solid var(--borderColor);
 }
 
 .btn-container:last-child {
     border: none;
 }
 
-.question-delete-btn {
+/* .question-delete-btn {
     padding: 5px 10px;
-}
+} */
 
 
 /* Hidden Fields onmouseout */
@@ -462,6 +471,32 @@ font-size: 16px;
     flex-direction: row;
 }
 
+/* add question */
+.add-new-question{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 15px;
+}
+.add-new-question .btn{
+    padding: 10px 16px;
+    border-radius: 5px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-new-question .font-awesome-kit{
+   color: white;
+   padding: 0px;
+   padding-right: 10px;
+}
+
+.add-new-question .btn-container{
+    padding: 0px;
+}
+
 @media screen and (max-width: 1064px) {
     .form-tool-section {
         position: fixed;
@@ -481,7 +516,9 @@ font-size: 16px;
 
 
 /* Buttons */
-
+.btn-container .fas{
+    cursor: pointer;
+}
 .question-edit-btn {
     font-size: 20px;
     margin: 0%;
@@ -491,13 +528,21 @@ font-size: 16px;
 .font-awesome-kit {
     padding: 10px 15px;
     color: gray;
+    cursor: pointer;
 }
 
 .font-awesome-kit:hover {
     transition: 0.2s;
-    color: red;
-}
 
+    /* color: red; */
+}
+.fa-trash-alt{
+    color: red;
+    cursor: pointer;
+}
+.fa-trash-alt:hover{
+    color: rgb(196, 4, 4);
+}
 
 /* Limitation */
 
@@ -518,13 +563,13 @@ font-size: 16px;
 
 .limit-container-item select {
     padding: 10px;
-    border: 1px solid gray;
+    border: 1px solid var(borderColor);
     border-radius: 5px;
 }
 
 .limit-container-item input {
     padding: 10px;
-    border: 1px solid gray;
+    border: 1px solid var(--borderColor);
     border-radius: 5px;
 }
 
@@ -559,6 +604,7 @@ font-size: 16px;
     width: 20px;
     height: 20px;
     margin: 0px 10px;
+    cursor: pointer;
 }
 
 .question-edit-input-label {
@@ -667,7 +713,7 @@ font-size: 16px;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid var(borderColor);
 }
 
 .discription-input-block {
@@ -727,7 +773,22 @@ font-size: 16px;
     line-height: 40px;
     cursor: pointer;
 }
-
+.add-btn{
+    padding: 10px 16px;
+    border-radius: 5px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+.add-btn .fas{
+    color: white;
+}
+.add-btn:hover{
+    background-color: rgb(1, 99, 1);
+    color: white;
+}
 @media screen and (max-width: 872px) {
     .wrapper {
         width: auto;

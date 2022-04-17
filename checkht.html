@@ -5,24 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script>
-       async function getMovieList(year) {
-  // write your code here
-  // API endpoint: https://jsonmock.hackerrank.com/api/movies?Year=<year>
-  const url = `https://jsonmock.hackerrank.com/api/movies?Year=${year}`;
-  await fetch(url)
-    .then((data) => data.json())
-    .then((res) => {
-      res.data.map((movieObj) => {
-        return console.log(movieObj.Title);
-      });
-    })
-    .catch((err) => err);
-}
-getMovieList(2011);
-    </script>
+   
 </head>
 <body>
-    <p id="dm"></p>
+ <div id="demo">Btns</div>
 </body>
+<script>
+  for(var i=0; i<5; i++){
+    var btn = document.createElement('button');
+    btn.appendChild(document.createTextNode('Button'+i));
+    btn.addEventListener('click',()=>console.log(i));
+    document.querySelector("#demo").appendChild(btn);
+  }
+</script>
 </html>

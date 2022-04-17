@@ -66,6 +66,15 @@ $(document).ready(function() {
     // currentIndexValue = $('.container .input-container:first').attr('id');
     currentIndexValue = questionIndexvalue = $('.container .input-container:last').attr('id');
     // Prevent Enter key
+            // Perform all task before leaving the page
+            $(window).blur(function() {
+
+                while(undoStack.items.length > 0){
+                    undoStack.shift();
+                }
+                      
+             });
+
     $('#newForm').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -131,7 +140,7 @@ $(document).ready(function() {
     $(".container").on('click', '.mcq-option-delete-btn', function(e) {
         var blockid = getCurrentIndex();
         var countOption = $(this).parent().closest('.client-input-field').children().length;
-        //console.log(countOption);
+     
         if (countOption > 2) {
             var optionId = $(this).parent().closest('.mcq-option-container').attr('id');
             $('#' + optionId).fadeOut();
@@ -228,12 +237,7 @@ $(document).ready(function() {
     });
 
     // Add New Question ----------------------------------------------------------------------
-
-    // Add question Event
-    $('.addNewQuestion').on('click', function(e) {
-        increasQuestionIndex();
-        var getIndex = questionIndex();
-        // console.log(getIndex);
+    function addNewQuestionBlock(getIndex,currentIndex){
         var newId = getIndex + '_new_question';
         var questionString = `<div id="` + newId + `" class="input-container"  draggable="false">
                     <div class="dragable-active">
@@ -297,10 +301,16 @@ $(document).ready(function() {
                             </p>
                         </div>
                     </div>
-                    
+                    <div class="add-new-question">
+                    <div class="btn-container">
+                            <p class="btn question-add-btn question-edit-btn noselect">
+                            <i class="fas fa-plus font-awesome-kit"></i>
+                            Add New Question
+                            </p>
+                        </div>
+                    </div>
                 </div>`;
-        var currentIndex = getCurrentIndex();
-        $('#' + currentIndex).after(questionString);
+         $('#' + currentIndex).after(questionString);
         $('#' + newId).click();
         $('#' + newId + ' .lable-input-field').focus();
         $form_id = $('.container').attr('id');
@@ -308,14 +318,30 @@ $(document).ready(function() {
         var is_required = 'false';
         var question_type = 'text';
         addNewQuestion($form_id, currentIndex, newId, question_value, question_type, is_required, 'new_q');
+    }
+    // Add question Event
+    $('.addNewQuestion').on('click', function(e) {
+        increasQuestionIndex();
+        var getIndex = questionIndex();
+     
+        var currentIndex = getCurrentIndex();
+        addNewQuestionBlock(getIndex,currentIndex)
+        
+        e.stopPropagation();
+    });
+    $('.container').on('click','.question-add-btn',function(e){
+        increasQuestionIndex();
+        var getIndex = questionIndex();
+        var currentIndex = $(this).parent().closest('.input-container').attr('id'); //.attr('id', getIndex)
+        addNewQuestionBlock(getIndex,currentIndex);
+       
         e.stopPropagation();
     });
     // Undo Remove 
     $('.undo-section').on('click', '.undo-btn', function(e) {
         var blockid = $(this).attr('id');
         blockid = blockid.replace('undo', '');
-        // blockid = blockid.replace('option', '');
-        // console.log(blockid);
+       
         $('#' + blockid).fadeIn();
         clearTimeout(undoStack.pop());
         $(this).remove();
@@ -335,7 +361,7 @@ $(document).ready(function() {
     // Delete Questions ------------------------------------------------------
     $('.container').on('click', '.question-delete-btn', function(e) {
         var countOption = $('.container').children().length;
-        //console.log('Child Length : '+countOption);
+       
         if (countOption > 2) {
             var currentIndex = getCurrentIndex();
             if ($('#' + currentIndex).prevAll('.input-container').length > 0) {
@@ -453,17 +479,15 @@ $(document).ready(function() {
                 formData['Questions'].push(questionSet);
             });
 
-            console.log(formData);
+           
             data = JSON.stringify(formData);
-            console.log(data);
-            //console.log('Question : '+lableValue+' Question Type : '+qTyppe);
+          
             jQuery.ajax({
                 type: "POST",
                 url: "ajax/create_new_form.php",
                 data: "formData=" + data,
                 success: function(result) {
 
-                    console.log('php response : ' + result);
                     var reponse = jQuery.parseJSON(result);
                     console.log(reponse);
                 },
@@ -870,7 +894,6 @@ function updateHeading(form_id, heading, o_type) {
         data: "heading_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -899,7 +922,7 @@ function addMcqField(currentIndex) {
                                  </div>
                                 </div>
                                 <div class="mcq-add-btn-field">
-                                   <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                   <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                                 </div></div>`;
         //var currentIndex = getCurrentIndex();
         addNewOption(currentIndex, option_id, 'new');
@@ -929,7 +952,7 @@ function addcheckbox(currentIndex) {
                             </div>
                             </div>
                             <div class="mcq-add-btn-field">
-                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                             </div>
                             </div>`;
         addNewOption(currentIndex, option_id, 'new');
@@ -961,7 +984,7 @@ function addDropDown(currentIndex) {
                             </div>
                             </div>
                             <div class="mcq-add-btn-field">
-                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                             </div>
                             </div>`;
         addNewOption(currentIndex, option_id, 'new');
@@ -987,7 +1010,6 @@ function questionUpdate(blockid, question_value) {
         data: "Question_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1009,7 +1031,6 @@ function questionTypeUpdagte(currentIndex, question_type) {
         data: "Question_Type_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1030,7 +1051,6 @@ function questionOptionUpdate(blockid, optionId, question_value) {
         data: "Question_Option_Update=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
         },
@@ -1123,7 +1143,7 @@ function addNewOption(blockid, preOptionId, o_type) {
 // Required Question
 function updateRequiredQuestion(blockid, checked) {
     var q_data = { 'ID': blockid, 'q_status': checked };
-    console.log(q_data);
+    
     q_data = JSON.stringify(q_data);
     jQuery.ajax({
         type: "POST",
@@ -1131,7 +1151,6 @@ function updateRequiredQuestion(blockid, checked) {
         data: "required_question=" + q_data,
         success: function(result) {
 
-            // console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
             // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);
@@ -1166,10 +1185,8 @@ function addDiscroptionField(question_no) {
         data: "add_q_discription=" + question_no,
         success: function(result) {
 
-            // console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
-            // console.log(reponse);
-            // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);
+         
             callbackAdddiscription(reponse["ID"], question_no);
         },
         error: function(errorData) {
@@ -1255,7 +1272,6 @@ function addNewQuestion($form_id, pre_question, blockid, q_label, q_type, is_req
         data: "add_new_question=" + q_data,
         success: function(result) {
 
-            console.log('php response : ' + result);
             var reponse = jQuery.parseJSON(result);
             console.log(reponse);
             // console.log('option_id:' + reponse["ID"] + ' Block Id:' + blockid);

@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+
 include'../../connection/connection.php';
 date_default_timezone_set("Asia/Calcutta");
 $datetime = date("Y-m-d H:i:s");
@@ -8,7 +10,9 @@ $l_p_date = 2;
 $user_id = $_COOKIE['userId'];
 $user_data = mysqli_fetch_assoc($conn->query("SELECT * FROM IFORM_USER WHERE USER_ID = '$user_id'"));
 $user_id = $user_data["USER_ID"];
-if($user_id) {
+if(!$user_id) {
+  $user_id = "Not a valid user";
+}
    function createResponseId(){
     $ResponseId = rand(100000,99999999);
     $ResponseId .= time();
@@ -23,9 +27,12 @@ if($user_id) {
   $response["UserId"] = $user_id;
   $response["formId"] = $formId;
   $submitTime=1;
-  $submission = mysqli_fetch_assoc($conn->query("SELECT COUNT(RESPONSE_ID) FROM IFORM_RESPONSES WHERE FORM_ID = '$formId' && USER_ID = '$user_id'"));
-  if($submission["COUNT(RESPONSE_ID)"]){
-      $submitTime = $submission["COUNT(RESPONSE_ID)"]+1;
+  if($user_id != "Not a valid user"){
+
+    $submission = mysqli_fetch_assoc($conn->query("SELECT COUNT(RESPONSE_ID) FROM IFORM_RESPONSES WHERE FORM_ID = '$formId' && USER_ID = '$user_id'"));
+    if($submission["COUNT(RESPONSE_ID)"]){
+        $submitTime = $submission["COUNT(RESPONSE_ID)"]+1;
+    }
   }
   if($formData["Submit_type"] == 'New'){
   
@@ -63,7 +70,7 @@ if($user_id) {
 else{
   $response["STATUS"] = "faild";
 }
-}
+
 echo json_encode($response);
 
 ?>

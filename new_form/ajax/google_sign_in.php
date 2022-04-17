@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 include'../../connection/connection.php';
   //  class UserData {
   //      public $userName;
@@ -23,6 +24,7 @@ include'../../connection/connection.php';
       $systemId .= $mail;
       return $systemId;
     }
+    // Google sign up
     if(isset($_POST["userDatalogin"])){
    
     $userData = json_decode($_POST["userDatalogin"],true);
@@ -30,6 +32,7 @@ include'../../connection/connection.php';
     $id = $userData["userId"];
     $image = $userData["userImage"];
     $mail = $userData["userMail"];
+    // $password = $userData["password"];
     $system_id = createSystemId($mail);
    $userId = makeId($id,$mail);
 
@@ -41,22 +44,25 @@ include'../../connection/connection.php';
       }
       else{
         $response["STATUS"] = "faild";
+        $response["message"] = "User is logged-in with other device";
       }
     }
    else{
-     $newUser = $conn->prepare("INSERT INTO IFORM_USER(USER_ID,USER_NAME,USER_MAIL,USER_IMAGE,SYSTEM_ID)VALUES(?,?,?,?,?)");
-     $newUser->bind_param('sssss',$newuserid,$newusername,$newusermail,$newuserimage,$newsystemid);
+     $newUser = $conn->prepare("INSERT INTO IFORM_USER(USER_ID,USER_NAME,USER_MAIL,USER_IMAGE,SYSTEM_ID,USER_PASSWORD)VALUES(?,?,?,?,?,?)");
+     $newUser->bind_param('ssssss',$newuserid,$newusername,$newusermail,$newuserimage,$newsystemid,$newPassword);
      $newuserid = $userId;
      $newusername = $name;
      $newusermail = $mail;
      $newuserimage = $image;
      $newsystemid = $system_id;
+     $newPassword = $password;
      
      if($newUser->execute()){
       $response = array("STATUS"=>"success","USER_ID"=>$userId,"SYSTEM_ID"=>$system_id);
      }
      else{
       $response["STATUS"] = "faild";
+      $response["message"] = "error";
      }
      $newUser->close();
    }
@@ -72,6 +78,64 @@ include'../../connection/connection.php';
       echo json_encode($response);
          
     }
+  // manual signup
+    if(isset($_POST["userSignUp"])){
+   
+      $userData = json_decode($_POST["userSignUp"],true);
+      $name = $userData["UserName"];
+      $id = $userData["userId"];
+      $image = $userData["userImage"];
+      $mail = $userData["userMail"];
+      $password = $userData["password"];
+      $system_id = createSystemId($mail);
+     $userId = $mail;
+  
+      $checkUserData = mysqli_fetch_assoc($conn->query("SELECT * FROM IFORM_USER WHERE USER_ID = '$userId'"));
+      $checkUserData1 = mysqli_fetch_assoc($conn->query("SELECT * FROM IFORM_USER WHERE USER_MAIL = '$mail'"));
+      if($checkUserData["USER_ID"] || $checkUserData1["USER_ID"]){
+        // $userUpdate = "UPDATE IFORM_USER SET SYSTEM_ID = '$system_id' WHERE USER_ID = '$userId'";
+        // if($conn->query($userUpdate)){
+        //   $response = array("STATUS"=>"success","USER_ID"=>$userId,"SYSTEM_ID"=>$system_id);
+        // }
+        // else{
+          $response["STATUS"] = "faild";
+          $response["message"] = "User already exist";
+        // }
+      }
+     else{
+       $newUser = $conn->prepare("INSERT INTO IFORM_USER(USER_ID,USER_NAME,USER_MAIL,USER_IMAGE,SYSTEM_ID,USER_PASSWORD)VALUES(?,?,?,?,?,?)");
+       $newUser->bind_param('ssssss',$newuserid,$newusername,$newusermail,$newuserimage,$newsystemid,$newPassword);
+       $newuserid = $userId;
+       $newusername = $name;
+       $newusermail = $mail;
+       $newuserimage = $image;
+       $newsystemid = $system_id;
+       $newPassword = $password;
+       
+       if($newUser->execute()){
+        // $response = array("STATUS"=>"success","USER_ID"=>$userId,"SYSTEM_ID"=>$system_id);
+        $response = array("STATUS"=>"success","USER_ID"=>$userId,"USER_NAME"=>$name,"USER_IMAGE"=>$image,"SYSTEM_ID"=>$system_id);
+       }
+       else{
+        $response["STATUS"] = "faild";
+        $response["message"] = "User already exist";
+       }
+       $newUser->close();
+     }
+    //   // $response = new UserData($id,$name,$image,$mail);
+    // //  echo json_encode($response);
+    //     if($name == "Arjeet Singh"){
+    //         // $response = new UserData($id,$name,$image,$mail);
+    //        $response = array("STATUS"=>"success");
+    //     }
+    //     else{
+    //       $response["STATUS"] = "faild";
+    //     }
+        echo json_encode($response);
+           
+      }
+
+
     if(isset($_POST["userDataId"])){
       $userData = json_decode($_POST["userDataId"],true);
       $userId = $userData["userId"];
@@ -88,10 +152,12 @@ include'../../connection/connection.php';
         }
         else{
           $response["STATUS"] = "faild";
+          $response["message"] = "User Id or Password is incorrect";
         }
       }
       else{
         $response["STATUS"] = "faild";
+        $response["message"] = "User Id or Password is incorrect";
       }
       echo json_encode($response);
     }

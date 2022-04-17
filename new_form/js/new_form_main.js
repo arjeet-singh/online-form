@@ -69,6 +69,14 @@ $(document).ready(function() {
     function getCurrentIndex() {
         return currentIndexValue;
     }
+            // Perform all task before leaving the page
+            $(window).blur(function() {
+
+                while(undoStack.items.length > 0){
+                    undoStack.shift();
+                }
+                      
+             });
     // Short Answer ---------------------------------------------------------------
     function addShortAnswerField(currentIndex) {
         $('#' + currentIndex + ' .client-input-field').remove();
@@ -94,7 +102,7 @@ $(document).ready(function() {
                                  </div>
                                 </div>
                                 <div class="mcq-add-btn-field">
-                                   <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                   <p class="mcq-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                                 </div></div>`;
             //var currentIndex = getCurrentIndex();
             $('#' + currentIndex + ' .selected-input').append(inputstring);
@@ -164,7 +172,7 @@ $(document).ready(function() {
                             </div>
                             </div>
                             <div class="mcq-add-btn-field">
-                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                             </div>
                             </div>`;
 
@@ -194,7 +202,7 @@ $(document).ready(function() {
                             </div>
                             </div>
                             <div class="mcq-add-btn-field">
-                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn">Add Option <i class="fas fa-plus"></i></p>
+                                 <p class="checkbox-add-btn add-option-btn noselect hidden-section-field event-btn add-btn">Add Option <i class="fas fa-plus"></i></p>
                             </div>
                             </div>`;
 
@@ -275,84 +283,101 @@ $(document).ready(function() {
         //   e.stopPropagation();
         //   e.stopImmediatePropagation();
     });
+    function addQuestioBlock(getIndex,currentIndex){
+        var questionString = `<div id="` + getIndex + `" class="input-container"  draggable="false">
+        <div class="dragable-active">
+            <i class="fas fa-grip-horizontal drag-hanger"></i>
+       </div>
+        <div class="q-type-section">
+              <div class="lable-input">
+                 <input class="lable-input-field text-input-field" name="lable_input" value="" placeholder="Question" required>
+              </div>
+              <div class="q-type-edit-section hidden-section-field hidden-section-class">
+                 <select class="question-type-selection" name="question_type">
+                     <option class="question-type-options" value="shortAnswer">Short Answer</option>
+                     <option class="question-type-options" value="radio">Multipal Choice</option>
+                     <option class="question-type-options" value="checkbox">checkbox</option>
+                     <option class="question-type-options" value="select">Dropdown</option>
+                     <option class="question-type-options" value="date">Date</option>
+                     <option class="question-type-options" value="time">Time</option>
+                     <option class="question-type-options" value="file">File Upload</option>
+                 </select>
+              </div>
+        </div>
+        <div class="discription-box">
+           
+        </div>
+        <div class="selected-input">
+            <div class="client-input-field">
+                 <input class="text-input-field" type="text" name="shortAnswer" value="" placeholder="Short answer text" required disabled>
+            </div>
+        </div>
+        <div class="input-limitation-field hidden-section-field hidden-section-class">
+            
+        </div>
+        <div class="question-contraions hidden-section-field hidden-section-class">
+        <div class="btn-container">
+                <p class="question-copy-btn question-edit-btn noselect">
+                <i class="far fa-clone font-awesome-kit copt-btn"></i>
+                </p>
+            </div>
+            <div class="btn-container">
+                <p class="question-delete-btn question-edit-btn noselect">
+                <i class="fas fa-trash-alt font-awesome-kit"></i>
+                </p>
+            </div>
 
+            <div class="btn-container">
+                <p class="question-required-btn question-edit-btn noselect">
+                    <input id="questionRequiredBtn_` + getIndex + `" class="required-check question-edit-input" type="checkbox" name="required" value="1">
+                    <label for="questionRequiredBtn_` + getIndex + `" class="question-edit-input-label">Required</label>
+                </p>
+            </div>
+            <div class="btn-container">
+            <p class="question-limitation-btn question-edit-btn noselect">
+                <div class="op-container">
+                <label class="opttion-bar-btn"><i class="fas fa-ellipsis-v font-awesome-kit copt-btn"></i></label>
+                <input type="text" class="menubar" value="Menu" readonly>  
+                <div class="menu-options">
+                        <p class="options-val"><input id="validation_` + getIndex + `" type="checkbox" class="tool-check" name="validation" value="Validation"><label for="validation_` + getIndex + `"> Validation</label></p>
+                        <p class="options-val"><input id="discription_` + getIndex + `" type="checkbox" class="tool-check" name="discription" value="Discription"><label for="discription_` + getIndex + `"> Discription</label></p>
+                    </div>
+                </div>    
+                </p>
+            </div>
+        </div>
+        <div class="add-new-question">
+                    <div class="btn-container">
+                            <p class="btn question-add-btn question-edit-btn noselect">
+                            <i class="fas fa-plus font-awesome-kit"></i>
+                            Add New Question
+                            </p>
+                        </div>
+                    </div>
+    </div>`;
+$('#' + currentIndex).after(questionString);
+$('#' + getIndex).click();
+$('#' + getIndex + ' .lable-input-field').focus();
+
+    }
     // Add New Question ----------------------------------------------------------------------
     $('.addNewQuestion').on('click', function(e) {
         increasQuestionIndex();
         var getIndex = questionIndex();
         // console.log(getIndex);
-
-        var questionString = `<div id="` + getIndex + `" class="input-container"  draggable="false">
-                    <div class="dragable-active">
-                        <i class="fas fa-grip-horizontal drag-hanger"></i>
-                   </div>
-                    <div class="q-type-section">
-                          <div class="lable-input">
-                             <input class="lable-input-field text-input-field" name="lable_input" value="" placeholder="Question" required>
-                          </div>
-                          <div class="q-type-edit-section hidden-section-field hidden-section-class">
-                             <select class="question-type-selection" name="question_type">
-                                 <option class="question-type-options" value="shortAnswer">Short Answer</option>
-                                 <option class="question-type-options" value="radio">Multipal Choice</option>
-                                 <option class="question-type-options" value="checkbox">checkbox</option>
-                                 <option class="question-type-options" value="select">Dropdown</option>
-                                 <option class="question-type-options" value="date">Date</option>
-                                 <option class="question-type-options" value="time">Time</option>
-                                 <option class="question-type-options" value="file">File Upload</option>
-                             </select>
-                          </div>
-                    </div>
-                    <div class="discription-box">
-                       
-                    </div>
-                    <div class="selected-input">
-                        <div class="client-input-field">
-                             <input class="text-input-field" type="text" name="shortAnswer" value="" placeholder="Short answer text" required disabled>
-                        </div>
-                    </div>
-                    <div class="input-limitation-field hidden-section-field hidden-section-class">
-                        
-                    </div>
-                    <div class="question-contraions hidden-section-field hidden-section-class">
-                    <div class="btn-container">
-                            <p class="question-copy-btn question-edit-btn noselect">
-                            <i class="far fa-clone font-awesome-kit copt-btn"></i>
-                            </p>
-                        </div>
-                        <div class="btn-container">
-                            <p class="question-delete-btn question-edit-btn noselect">
-                            <i class="fas fa-trash-alt font-awesome-kit"></i>
-                            </p>
-                        </div>
-
-                        <div class="btn-container">
-                            <p class="question-required-btn question-edit-btn noselect">
-                                <input id="questionRequiredBtn_` + getIndex + `" class="required-check question-edit-input" type="checkbox" name="required" value="1">
-                                <label for="questionRequiredBtn_` + getIndex + `" class="question-edit-input-label">Required</label>
-                            </p>
-                        </div>
-                        <div class="btn-container">
-                        <p class="question-limitation-btn question-edit-btn noselect">
-                            <div class="op-container">
-                            <label class="opttion-bar-btn"><i class="fas fa-ellipsis-v font-awesome-kit copt-btn"></i></label>
-                            <input type="text" class="menubar" value="Menu" readonly>  
-                            <div class="menu-options">
-                                    <p class="options-val"><input id="validation_` + getIndex + `" type="checkbox" class="tool-check" name="validation" value="Validation"><label for="validation_` + getIndex + `"> Validation</label></p>
-                                    <p class="options-val"><input id="discription_` + getIndex + `" type="checkbox" class="tool-check" name="discription" value="Discription"><label for="discription_` + getIndex + `"> Discription</label></p>
-                                </div>
-                            </div>    
-                            </p>
-                        </div>
-                    </div>
-                    
-                </div>`;
         var currentIndex = getCurrentIndex();
-        $('#' + currentIndex).after(questionString);
-        $('#' + getIndex).click();
-        $('#' + getIndex + ' .lable-input-field').focus();
-
+          
+        addQuestioBlock(getIndex,currentIndex);
         e.stopPropagation();
     });
+    $('.container').on('click','.question-add-btn',function(){
+        increasQuestionIndex();
+        var getIndex = questionIndex();
+        var currentIndex = $(this).parent().closest('.input-container').attr('id'); //.attr('id', getIndex)
+        addQuestioBlock(getIndex,currentIndex);
+        e.stopPropagation();
+    })
+    //
 
     // Undo Remove 
     $('.undo-section').on('click', '.undo-btn', function(e) {
@@ -427,7 +452,7 @@ $(document).ready(function() {
     // Form Submit Event ---------------------
     function changeLocation(formId) {
         console.log('Relocation');
-        var page = "http://www.aapkaman.in/simliFY/iform/saved-from/?id=" + formId;
+        var page = "http://www.aapkaman.in/simliFY/updated/iform/saved-from/?id=" + formId;
         window.location.replace(page);
     }
     $('#newForm').submit(function() {
