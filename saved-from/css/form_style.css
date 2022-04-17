@@ -294,7 +294,22 @@ font-size: 16px;
     padding-left: 10px;
 }
 
+@media screen and (max-width : 768px) {
 
+    .q-type-section{
+        flex-direction: column;
+    }
+    .q-type-section .lable-input{
+        width: 100%;
+    }
+    .q-type-section .q-type-edit-section{
+        width: 100%;
+    }
+    .lable-input-field{
+        width: 100%;
+        margin-right: 0px;
+    }
+}
 /* slected-input */
 
 .selected-input {

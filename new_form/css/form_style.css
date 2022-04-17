@@ -241,27 +241,28 @@ font-size: 16px;
 .q-type-section {
     display: flex;
     padding: 0px 0px;
+    flex-direction: row;
 }
-
-.lable-input {
-    width: 70%;
-}
-
-.q-type-edit-section {
-    width: 30%;
-}
-
-.question-type-selection {
-    width: 100%;
-    margin: 10px 0px;
-    padding: 10px 20px;
-    border: 1px solid var(--borderColor);
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-
+    
+    .lable-input {
+        width: 70%;
+    }
+    
+    .q-type-edit-section {
+        width: 30%;
+    }
+    
+    .question-type-selection {
+        width: 100%;
+        margin: 10px 0px;
+        padding: 10px 20px;
+        border: 1px solid var(--borderColor);
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    
 /* Lable input field */
 
 .text-input-field {
@@ -291,6 +292,22 @@ font-size: 16px;
 }
 
 
+@media screen and (max-width : 768px) {
+
+    .q-type-section{
+        flex-direction: column;
+    }
+    .q-type-section .lable-input{
+        width: 100%;
+    }
+    .q-type-section .q-type-edit-section{
+        width: 100%;
+    }
+    .lable-input-field{
+        width: 100%;
+        margin-right: 0px;
+    }
+}
 /* slected-input */
 
 .selected-input {
@@ -789,6 +806,12 @@ font-size: 16px;
     background-color: rgb(1, 99, 1);
     color: white;
 }
+.fa-times{
+   color: red;
+}
+.fa-times:hover{
+    color: rgb(159, 1, 1);
+ }
 @media screen and (max-width: 872px) {
     .wrapper {
         width: auto;
