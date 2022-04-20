@@ -37,6 +37,7 @@ else{
     <link rel="stylesheet" href="../css/page_head.css?t=34">
     <link rel="stylesheet" href="css/ajax-loader.css?s=35">
     <link rel="stylesheet" href="../css/form-menu-bar.css?s=24">
+    <link rel="stylesheet" href="css/animation.css">
 
     <script src="js/new_form_main.js"></script>
     <script src="js/valid_user_js.js"></script>

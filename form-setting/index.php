@@ -1,5 +1,5 @@
 <?php
-  
+  error_reporting(0);
   include'../connection/connection.php';
   if(isset($_COOKIE['userName'])) {
     $userMail = $_COOKIE["userId"];
@@ -36,12 +36,14 @@
     <link rel="stylesheet" href="css/form_style.css?t=32">
     <link rel="stylesheet" href="../css/page_head.css?t=34">
     <link rel="stylesheet" href="../css/form-menu-bar.css?s=24">
+    <link rel="stylesheet" href="css/form-setting.css">
     <script src="js/form_main.js"></script>
     <script src="js/valid_user_js.js"></script>
     <script> 
     let form_id =  '<?php echo $form_id; ?>';
     </script>
     <script src="../js/form-menu-bar.js"> </script>
+    <script src="js/form-setting.js"></script>
     <style>
        
          .error-image{
@@ -54,11 +56,11 @@
 
 <body>
    <?php include'../pages/page_head.html'; ?>
-   <!-- <div class="form-setting-block">
+     <div class="form-setting-block">
          <div class="status">
              <p id="formStatus">Saved</p>
          </div>
-     </div> -->
+     </div>
      <div class="menu-btn-container">
      <div class="menu-sub-btn">
          <p><i class="fas menu-btn-sub-bar fa-caret-down"></i></p>
@@ -90,8 +92,24 @@
            <h4 class="form-heading"><?php echo $form_data["FORM_SUB_HEADING"]; ?></h4>
            
         </div>
-        <form id="newForm">
-          <img class="error-image" src="../images/work-in-progress.jpeg">
+        <form id="<?php echo $form_id; ?>">
+          <!-- <img class="error-image" src="../images/work-in-progress.jpeg"> -->
+          <div class="form-field-container">
+
+           <p class="setting-key">Form resubmitting</p>
+           <input class="resubmit checkbox-input" type="checkbox" value="1" <?php echo $form_data["RESUBMIT"] ? "checked" : ""; ?>>
+          </div>
+          <div class="form-field-container">
+
+           <p class="setting-key">Random ordered question</p>
+           <input class="random-order checkbox-input" type="checkbox" value="1" <?php echo $form_data["RANDOM_ORDER"] ? "checked" : ""; ?>>
+          </div>
+          <div class="form-field-container">
+
+           <p class="setting-key">Responses are editable</p>
+           <input class="editable checkbox-input" type="checkbox" value="1" <?php echo $form_data["EDITABLE"] ? "checked" : ""; ?>>
+          </div>
+          
         </form>
     </div>
 

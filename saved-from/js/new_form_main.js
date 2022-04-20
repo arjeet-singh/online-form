@@ -58,22 +58,93 @@ function updateCurrentIndex(curr) {
 function getCurrentIndex() {
     return currentIndexValue;
 }
+var undoStack = new Stack();
 
 $(document).ready(function() {
     // Intialize Undo Stack
-    let undoStack = new Stack();
     // $('.container .input-container').eq(0).click();
     // currentIndexValue = $('.container .input-container:first').attr('id');
-    currentIndexValue = questionIndexvalue = $('.container .input-container:last').attr('id');
+    while(!$('.container .input-container').length){
+
+    }
+    currentIndexValue = questionIndexvalue = $('.container .input-container:first').attr('id');
     // Prevent Enter key
             // Perform all task before leaving the page
             $(window).blur(function() {
 
                 while(undoStack.items.length > 0){
-                    undoStack.shift();
+                    clearTimeout(undoStack.shift());
                 }
                       
              });
+             document.addEventListener('keydown', e => {
+                // console.log(e);
+                if(e.ctrlKey && e.altKey && e.code === "KeyN"){
+                    e.preventDefault();
+
+                    increasQuestionIndex();
+                    var getIndex = questionIndex();
+                    var currentIndex = getCurrentIndex();
+                    addNewQuestionBlock(getIndex,currentIndex);
+                    $('html, body').animate({
+                     scrollTop: $("#"+getIndex+'_new_question').offset().top-150
+                 }, 1);
+                }
+                if(e.ctrlKey && e.altKey && e.key.toLowerCase() === "b"){
+                    var currentIndex = getCurrentIndex();
+                    var preType = $('#' + currentIndex + ' .question-type-selection').val();
+                 
+                 if (preType == 'checkbox' || preType == 'radio' || preType == 'select'){
+                     var currentIndex = getCurrentIndex();
+                     addOptions(currentIndex);
+                     
+                 }
+             }
+             if(e.ctrlKey && e.altKey && e.key === "ArrowUp"){
+                 var currentIndex = getCurrentIndex();
+                //  console.log(currentIndex);
+                 var prevQ = $('#' + currentIndex).prev().attr('id');
+                //  console.log(prevQ);
+                 while(prevQ){
+                    if($('#'+prevQ).css('display') == 'none'){
+                        prevQ = $('#' + prevQ).prev().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                 if(prevQ){
+                     switchQuestion(currentIndex,prevQ)
+                     $('html, body').animate({
+                         scrollTop: $("#"+prevQ).offset().top-130
+                     }, 1);
+                 }
+              
+             }
+             if(e.ctrlKey && e.altKey && e.key === "ArrowDown"){
+                 var currentIndex = getCurrentIndex();
+                 var nextQ = $('#' + currentIndex).next().attr('id');
+                 while(nextQ){
+                    if($('#'+nextQ).css('display') == 'none'){
+                        nextQ = $('#' + nextQ).next().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                 if(nextQ){
+                     switchQuestion(currentIndex,nextQ)
+                     $('html, body').animate({
+                         scrollTop: $("#"+nextQ).offset().top-130
+                     }, 1);
+                 }
+              
+             }
+             if(e.ctrlKey && e.altKey && e.key === "Backspace"){
+                 var currentIndex = getCurrentIndex();
+                 DelteQuestion(currentIndex);
+             }
+             });         
 
     $('#newForm').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
@@ -95,12 +166,8 @@ $(document).ready(function() {
     }
 
     // Add option Event
-    $(".container").on('click', '.add-option-btn', function(e) {
-        var currentIndex = getCurrentIndex();
-        // var countOption = $(this).parent().closest('.client-input-field').children().length;
-        // var question_no = $(this).parent().closest('.input-container').attr('id');
-        // var preType = $('#' + currentIndex + ' .client-input-field input:first-child').attr('type');
-        var option_id = 'ram_option';
+    function addOptions(currentIndex){
+        var option_id = Math.floor(Math.random() * 100000) + 1;
         var countOption = $('#' + currentIndex + ' .client-input-field').children().length;
         var preType = $('#' + currentIndex + ' .client-input-field input:first-child').attr('type');
         var addOption = `<div id="` + option_id + `" class="mcq-option-container option-container">
@@ -115,12 +182,21 @@ $(document).ready(function() {
         $('#' + currentIndex + ' .mcq-add-btn-field').before(addOption);
         $('#' + currentIndex + ' .client-input-field:last-child input[type=text]').focus();
         addNewOption(currentIndex, option_id, 'add');
+    }
+    $(".container").on('click', '.add-option-btn', function(e) {
+        var currentIndex = getCurrentIndex();
+        // var countOption = $(this).parent().closest('.client-input-field').children().length;
+        // var question_no = $(this).parent().closest('.input-container').attr('id');
+        // var preType = $('#' + currentIndex + ' .client-input-field input:first-child').attr('type');
+        // var option_id = 'ram_option';
+        addOptions(currentIndex);
 
         e.stopPropagation();
     });
     // Remove question
     function removeQuestionOption(blockid, option_id) {
-        var undobtn = `<div id='` + option_id + `undo' class='undo-btn noselect'><p>Undo</p></div>`;
+        var undobtn = `<div id='` + option_id + `undo' class='undo-btn noselect'><p>Undo</p><div class='geeks'></div></div>`;
+        // var undobtn = `<div id='` + option_id + `undo' class='undo-btn noselect'><p>Undo</p></div>`;
         $('.undo-section').append(undobtn);
         undoStack.push(setTimeout(function() {
             $('#' + option_id + 'undo').remove();
@@ -359,33 +435,83 @@ $(document).ready(function() {
     //     }, 10000));
     // }
     // Delete Questions ------------------------------------------------------
-    $('.container').on('click', '.question-delete-btn', function(e) {
+          // Delete Questions ------------------------------------------------------
+    function DelteQuestion(currentIndex){
         var countOption = $('.container').children().length;
-       
+        //console.log('Child Length : '+countOption);
         if (countOption > 2) {
-            var currentIndex = getCurrentIndex();
+            
             if ($('#' + currentIndex).prevAll('.input-container').length > 0) {
-                $('#' + currentIndex).prevAll('.input-container:first').click();
+                // $('#' + currentIndex).prevAll('.input-container:first').click();
+                var nextQ = $('#' + currentIndex).prev().attr('id');
+                while(nextQ){
+                    if($('#'+nextQ).css('display') == 'none'){
+                        nextQ = $('#' + nextQ).prev().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                $('#' + nextQ).click();
+
+                // $('#' + currentIndex).prev().click();
+
+                $('html, body').animate({
+                    scrollTop: $("#"+currentIndex).prev().offset().top-130
+                }, 1);
             } else {
-                $('#' + currentIndex).nextAll('.input-container:first').click();
+                // $('#' + currentIndex).nextAll('.input-container:first').click();
+                var nextQ = $('#' + currentIndex).next().attr('id');
+                while(nextQ){
+                    if($('#'+nextQ).css('display') == 'none'){
+                        nextQ = $('#' + nextQ).next().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                $('#' + nextQ).click();
+
+                $('html, body').animate({
+                    scrollTop: $("#"+currentIndex).next().offset().top-130
+                }, 1);
             }
             removeQuestion(currentIndex);
             $('#' + currentIndex).fadeOut();
+            
         }
+    }
+       $('.container').on('click', '.question-delete-btn', function(e) {
+        
+        var currentIndex = getCurrentIndex();
+        DelteQuestion(currentIndex);
+        // if (countOption > 2) {
+        //     var currentIndex = getCurrentIndex();
+        //     if ($('#' + currentIndex).prevAll('.input-container').length > 0) {
+        //         $('#' + currentIndex).prevAll('.input-container:first').click();
+        //     } else {
+        //         $('#' + currentIndex).nextAll('.input-container:first').click();
+        //     }
+        //     removeQuestion(currentIndex);
+        //     $('#' + currentIndex).fadeOut();
+        // }
         e.stopPropagation();
     });
     // Current Question Index -------------------------------------------------
-    $(".container").on('click', '.input-container', function(e) {
-
-        var currentIndex1 = getCurrentIndex();
+    function switchQuestion(currentIndex1,currentIndex){
         $('#' + currentIndex1 + ' .hidden-section-field').addClass('hidden-section-class');
         $('#' + currentIndex1 + ' .text-input-field').removeClass('current-active-block');
         $('#' + currentIndex1).css('border-left', '1px solid teal');
-        $(this).css('border-left', '5px solid teal');
-        var currentIndex = $(this).attr('id');
+        $('#'+currentIndex).css('border-left', '5px solid teal');
         $('#' + currentIndex + ' .hidden-section-field').removeClass('hidden-section-class');
         $('#' + currentIndex + ' .text-input-field').addClass('current-active-block');
         updateCurrentIndex(currentIndex);
+    }
+    $(".container").on('click', '.input-container', function(e) {
+
+        var currentIndex1 = getCurrentIndex();
+        var currentIndex = $(this).attr('id');
+        switchQuestion(currentIndex1,currentIndex)
         e.stopPropagation();
     });
     // Create clone of Question
@@ -765,7 +891,8 @@ $(document).ready(function() {
     // Discription
     // Remove Dicription
     function removeQuestion(blockid, o_type) {
-        var undobtn = `<div id='` + blockid + `undo' class='undo-btn noselect'><p>Undo</p></div>`;
+        var undobtn = `<div id='` + blockid + `undo' class='undo-btn noselect'><p>Undo</p><div class='geeks'></div></div>`;
+        // var undobtn = `<div id='` + blockid + `undo' class='undo-btn noselect'><p>Undo</p></div>`;
         // console.log('Discription ID: ' + blockid);
         $('.undo-section').append(undobtn);
         undoStack.push(setTimeout(function() {
@@ -910,7 +1037,9 @@ function addMcqField(currentIndex) {
     // console.log(preType);
     if (preType != 'checkbox' && preType != 'radio' && preType != 'number') {
         $('#' + currentIndex + ' .client-input-field').remove();
-        var option_id = "ram_option";
+        // var option_id = "ram_option";
+        var option_id = Math.floor(Math.random() * 100000) + 1;
+
         var inputstring = `<div class="client-input-field">
                                 <div id="` + option_id + `" class="mcq-option-container option-container">
                                 <div class="input-field-data-section">
@@ -940,7 +1069,9 @@ function addcheckbox(currentIndex) {
     if (preType != 'checkbox' && preType != 'radio' && preType != 'number') {
         //var currentIndex = getCurrentIndex();
         $('#' + currentIndex + ' .client-input-field').remove();
-        var option_id = "ram_option";
+        // var option_id = "ram_option";
+        var option_id = Math.floor(Math.random() * 100000) + 1;
+
         var inputstring = `<div class="client-input-field">
                             <div id="` + option_id + `" class="mcq-option-container option-container">
                             <div class="input-field-data-section">
@@ -972,7 +1103,9 @@ function addDropDown(currentIndex) {
     if (preType != 'checkbox' && preType != 'radio') {
         //var currentIndex = getCurrentIndex();
         $('#' + currentIndex + ' .client-input-field').remove();
-        var option_id = "ram_option";
+        // var option_id = "ram_option";
+        var option_id = Math.floor(Math.random() * 100000) + 1;
+
         var inputstring = `<div class="client-input-field">
                             <div id="` + option_id + `" class="mcq-option-container option-container">
                             <div class="input-field-data-section">

@@ -30,6 +30,11 @@
     <script src="https://kit.fontawesome.com/480a62ecd0.js" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <!-- Bootstrap -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  <!-- bt -->
     <link rel="stylesheet" href="css/form_style.css?t=32">
     <link rel="stylesheet" href="../css/page_head.css?t=34">
     <link rel="stylesheet" href="../css/form-menu-bar.css?s=24">

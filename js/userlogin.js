@@ -3,7 +3,13 @@ $(document).ready(function() {
 
     if ($.cookie("userName")) {
         console.log('user logged in');
-        $('#userimage').attr('src', getCookie("userImage"));
+        if(!getCookie("userImage")){
+            $('#userimage').remove();
+        }
+        else{
+
+            $('#userimage').attr('src', getCookie("userImage"));
+        }
         $('#username').html(getCookie("userName"));
     } else {
         window.location.replace("../home/");

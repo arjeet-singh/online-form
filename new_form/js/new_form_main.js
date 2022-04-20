@@ -44,6 +44,71 @@ $(document).ready(function() {
     // Intialize Undo Stack
     let undoStack = new Stack();
     // Prevent Enter key
+    document.addEventListener('keydown', e => {
+    //    console.log(e);
+       if(e.ctrlKey && e.altKey && e.code === "KeyN"){
+           e.preventDefault();
+        //    console.log("adding new question");
+           increasQuestionIndex();
+           var getIndex = questionIndex();
+           var currentIndex = getCurrentIndex();
+           addQuestioBlock(getIndex,currentIndex);
+           $('html, body').animate({
+            scrollTop: $("#"+getIndex).offset().top-150
+        }, 1);
+       }
+       if(e.ctrlKey && e.altKey && e.key.toLowerCase() === "b"){
+           var currentIndex = getCurrentIndex();
+           var preType = $('#' + currentIndex + ' .question-type-selection').val();
+        
+        if (preType == 'checkbox' || preType == 'radio' || preType == 'select'){
+            var currentIndex = getCurrentIndex();
+            addOptions(currentIndex);
+        }
+    }
+    if(e.ctrlKey && e.altKey && e.key === "ArrowUp"){
+        var currentIndex = getCurrentIndex();
+        var prevQ = $('#' + currentIndex).prev().attr('id');
+        while(prevQ){
+            if($('#'+prevQ).css('display') == 'none'){
+                prevQ = $('#' + prevQ).prev().attr('id');
+            }
+            else{
+                break;
+            }
+        }
+        if(prevQ){
+            switchQuestion(currentIndex,prevQ)
+            $('html, body').animate({
+                scrollTop: $("#"+prevQ).offset().top-130
+            }, 1);
+        }
+     
+    }
+    if(e.ctrlKey && e.altKey && e.key === "ArrowDown"){
+        var currentIndex = getCurrentIndex();
+        var nextQ = $('#' + currentIndex).next().attr('id');
+        while(nextQ){
+            if($('#'+nextQ).css('display') == 'none'){
+                nextQ = $('#' + nextQ).next().attr('id');
+            }
+            else{
+                break;
+            }
+        }
+        if(nextQ){
+            switchQuestion(currentIndex,nextQ)
+            $('html, body').animate({
+                scrollTop: $("#"+nextQ).offset().top-130
+            }, 1);
+        }
+     
+    }
+    if(e.ctrlKey && e.altKey && e.key === "Backspace"){
+        var currentIndex = getCurrentIndex();
+        DelteQuestion(currentIndex);
+    }
+    });
     $('#newForm').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -73,7 +138,7 @@ $(document).ready(function() {
             $(window).blur(function() {
 
                 while(undoStack.items.length > 0){
-                    undoStack.shift();
+                    clearTimeout(undoStack.shift());
                 }
                       
              });
@@ -111,10 +176,8 @@ $(document).ready(function() {
         }
     }
     // Add  Options -------------
-
-    $(".container").on('click', '.add-option-btn', function(e) {
-        var currentIndex = getCurrentIndex();
-        var countOption = $(this).parent().closest('.client-input-field').children().length;
+    function addOptions(currentIndex){
+        var countOption = $('#'+currentIndex+' .client-input-field').children().length;
         var preType = $('#' + currentIndex + ' .client-input-field input:first-child').attr('type');
         var addOption = `<div class="mcq-option-container option-container">
                                 <div class="input-field-data-section">
@@ -125,9 +188,14 @@ $(document).ready(function() {
                                         <p class="mcq-option-delete-btn noselect question-edit-btn hidden-section-field"><i class="fas fa-times font-awesome-kit"></i></p>
                                 </div>
                                 </div>`;
-        $(this).parent().closest('.mcq-add-btn-field').before(addOption);
+                                $('#'+currentIndex+' .client-input-field .mcq-add-btn-field').before(addOption);
         $('#' + currentIndex + ' .client-input-field:last-child input[type=text]').focus();
 
+    }
+    $(".container").on('click', '.add-option-btn', function(e) {
+        var currentIndex = getCurrentIndex();
+        addOptions(currentIndex);
+        
         e.stopPropagation();
     });
 
@@ -358,7 +426,9 @@ $(document).ready(function() {
 $('#' + currentIndex).after(questionString);
 $('#' + getIndex).click();
 $('#' + getIndex + ' .lable-input-field').focus();
-
+$('html, body').animate({
+    scrollTop: $("#"+getIndex).offset().top-200
+}, 1);
     }
     // Add New Question ----------------------------------------------------------------------
     $('.addNewQuestion').on('click', function(e) {
@@ -393,7 +463,7 @@ $('#' + getIndex + ' .lable-input-field').focus();
     // Remove question
     function removeQuestion(currentIndex) {
         var undobtn = `<div id='` + currentIndex + `undo' class='undo-btn noselect'><p>Undo</p><div class='geeks'></div></div>`;
-        var undofun = $('.undo-section').append(undobtn);
+        $('.undo-section').append(undobtn);
         undoStack.push(setTimeout(function() {
             $('#' + currentIndex + 'undo').remove();
             undoStack.shift();
@@ -401,33 +471,71 @@ $('#' + getIndex + ' .lable-input-field').focus();
         }, 10000));
     }
     // Delete Questions ------------------------------------------------------
-    $('.container').on('click', '.question-delete-btn', function(e) {
+    function DelteQuestion(currentIndex){
         var countOption = $('.container').children().length;
         //console.log('Child Length : '+countOption);
         if (countOption > 2) {
-            var currentIndex = getCurrentIndex();
+            
             if ($('#' + currentIndex).prevAll('.input-container').length > 0) {
-                $('#' + currentIndex).prevAll('.input-container:first').click();
+                // $('#' + currentIndex).prevAll('.input-container:first').click();
+                var nextQ = $('#' + currentIndex).prev().attr('id');
+                while(nextQ){
+                    if($('#'+nextQ).css('display') == 'none'){
+                        nextQ = $('#' + nextQ).prev().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                $('#' + nextQ).click();
+
+                // $('#' + currentIndex).prev().click();
+
+                $('html, body').animate({
+                    scrollTop: $("#"+currentIndex).prev().offset().top-130
+                }, 1);
             } else {
-                $('#' + currentIndex).nextAll('.input-container:first').click();
+                // $('#' + currentIndex).nextAll('.input-container:first').click();
+                var nextQ = $('#' + currentIndex).next().attr('id');
+                while(nextQ){
+                    if($('#'+nextQ).css('display') == 'none'){
+                        nextQ = $('#' + nextQ).next().attr('id');
+                    }
+                    else{
+                        break;
+                    }
+                }
+                $('#' + nextQ).click();
+
+                $('html, body').animate({
+                    scrollTop: $("#"+currentIndex).next().offset().top-130
+                }, 1);
             }
             removeQuestion(currentIndex);
             $('#' + currentIndex).fadeOut();
+            
         }
+    }
+    $('.container').on('click', '.question-delete-btn', function(e) {
+        var currentIndex = getCurrentIndex();
+        DelteQuestion(currentIndex);
         e.stopPropagation();
     });
     // Current Question Index -------------------------------------------------
-    $(".container").on('click', '.input-container', function(e) {
-
-        var currentIndex1 = getCurrentIndex();
+    function switchQuestion(currentIndex1,currentIndex){
         $('#' + currentIndex1 + ' .hidden-section-field').addClass('hidden-section-class');
         $('#' + currentIndex1 + ' .text-input-field').removeClass('current-active-block');
         $('#' + currentIndex1).css('border-left', '1px solid teal');
-        $(this).css('border-left', '5px solid teal');
-        var currentIndex = $(this).attr('id');
+        $('#'+currentIndex).css('border-left', '5px solid teal');
         $('#' + currentIndex + ' .hidden-section-field').removeClass('hidden-section-class');
         $('#' + currentIndex + ' .text-input-field').addClass('current-active-block');
         updateCurrentIndex(currentIndex);
+    }
+    $(".container").on('click', '.input-container', function(e) {
+
+        var currentIndex1 = getCurrentIndex();
+        var currentIndex = $(this).attr('id');
+        switchQuestion(currentIndex1,currentIndex)
         e.stopPropagation();
     });
     // Create clone of Question
